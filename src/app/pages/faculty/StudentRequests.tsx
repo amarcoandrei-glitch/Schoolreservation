@@ -3,7 +3,7 @@ import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { SearchBar } from '../../components/ui/SearchBar';
-import { User, Calendar, Package, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { User, Calendar, Package, CheckCircle, XCircle, Loader2, Clock } from 'lucide-react';
 import { useAuth } from '../../../contexts/AuthContext';
 import { reservationService, Reservation, ReservationStatus } from '../../../services/reservationService';
 
@@ -55,6 +55,18 @@ export function StudentRequests() {
   const handleReject = async (r: Reservation) => {
     setActionId(r.id);
     try { await reservationService.reject(r.id, r, 'Request declined by faculty'); }
+    finally { setActionId(null); }
+  };
+
+  const handleMarkBorrowed = async (r: Reservation) => {
+    setActionId(r.id);
+    try { await reservationService.markBorrowed(r.id, r); }
+    finally { setActionId(null); }
+  };
+
+  const handleMarkReturned = async (r: Reservation) => {
+    setActionId(r.id);
+    try { await reservationService.markReturned(r.id, r); }
     finally { setActionId(null); }
   };
 
@@ -166,12 +178,19 @@ export function StudentRequests() {
                   </div>
                 )}
 
-                {r.status === 'approved' || r.status === 'borrowed' ? (
-                  <div className="flex items-center lg:justify-center shrink-0">
-                    <div className="flex items-center gap-2 px-3 py-2 bg-emerald-50 rounded-lg text-emerald-700 text-sm font-medium">
-                      <CheckCircle className="w-4 h-4" />
-                      Approved
-                    </div>
+                {r.status === 'approved' ? (
+                  <div className="flex items-center gap-2 lg:flex-col lg:justify-center shrink-0">
+                    <Button variant="success" size="sm" disabled={actionId === r.id} onClick={() => handleMarkBorrowed(r)} className="flex items-center gap-1.5">
+                      {actionId === r.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Clock className="w-3.5 h-3.5" />}
+                      Mark Borrowed
+                    </Button>
+                  </div>
+                ) : r.status === 'borrowed' ? (
+                  <div className="flex items-center gap-2 lg:flex-col lg:justify-center shrink-0">
+                    <Button variant="info" size="sm" disabled={actionId === r.id} onClick={() => handleMarkReturned(r)} className="flex items-center gap-1.5">
+                      {actionId === r.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle className="w-3.5 h-3.5" />}
+                      Mark Returned
+                    </Button>
                   </div>
                 ) : null}
 

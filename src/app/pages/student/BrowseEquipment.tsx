@@ -118,7 +118,7 @@ export function BrowseEquipment({ onViewDetails }: BrowseEquipmentProps) {
         equipmentLocation: reserveTarget.location,
         userId: userProfile.uid,
         userName: userProfile.name,
-        userRole: 'student',
+        userRole: userProfile.role === 'faculty' ? 'faculty' : 'student',
         quantity: form.quantity,
         reservationDate: form.startDate,
         returnDate: form.returnDate,
@@ -200,19 +200,23 @@ export function BrowseEquipment({ onViewDetails }: BrowseEquipmentProps) {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filtered.map((item) => (
-            <EquipmentCard
-              key={item.id}
-              name={item.name}
-              category={item.category}
-              image={item.imageUrl ? optimizeImageUrl(item.imageUrl, 400, 80) : undefined}
-              available={item.availableQuantity}
-              total={item.quantity}
-              location={item.location}
-              onReserve={() => openReserve(item)}
-              onView={() => onViewDetails(item.id)}
-            />
-          ))}
+          {filtered.map((item) => {
+            const isOwnedByUser = userProfile?.role === 'faculty' && item.ownerId === userProfile.uid;
+            return (
+              <EquipmentCard
+                key={item.id}
+                name={item.name}
+                category={item.category}
+                image={item.imageUrl ? optimizeImageUrl(item.imageUrl, 400, 80) : undefined}
+                available={item.availableQuantity}
+                total={item.quantity}
+                location={item.location}
+                isOwnedByUser={isOwnedByUser}
+                onReserve={() => openReserve(item)}
+                onView={() => onViewDetails(item.id)}
+              />
+            );
+          })}
         </div>
       )}
 

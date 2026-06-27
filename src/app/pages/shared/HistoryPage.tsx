@@ -4,7 +4,7 @@ import { Badge } from '../../components/ui/Badge';
 import { SearchBar } from '../../components/ui/SearchBar';
 import {
   Package, Calendar, MapPin, Clock, Loader2,
-  CheckCircle, XCircle, History, RotateCcw,
+  CheckCircle, XCircle, History, RotateCcw, Users,
 } from 'lucide-react';
 import { useAuth } from '../../../contexts/AuthContext';
 import { reservationService, Reservation, ReservationStatus } from '../../../services/reservationService';

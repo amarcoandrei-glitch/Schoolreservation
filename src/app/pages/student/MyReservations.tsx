@@ -19,10 +19,10 @@ const FILTER_STATUS: Record<FilterTab, ReservationStatus[]> = {
 };
 
 interface MyReservationsProps {
-  onViewDetails: (equipmentId: string) => void;
+  onViewDetails?: (equipmentId: string) => void;
 }
 
-export function MyReservations({ onViewDetails }: MyReservationsProps) {
+export function MyReservations({ onViewDetails: onViewDetailsParam }: MyReservationsProps) {
   const { userProfile } = useAuth();
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [equipmentById, setEquipmentById] = useState<Record<string, Equipment>>({});
@@ -216,7 +216,9 @@ export function MyReservations({ onViewDetails }: MyReservationsProps) {
                         {actionId === r.id ? <Loader2 className="w-3 h-3 animate-spin" /> : 'Return Equipment'}
                       </Button>
                     )}
-                    <Button variant="ghost" size="sm" onClick={() => onViewDetails(r.equipmentId)}>View Details</Button>
+                    {onViewDetailsParam && (
+                      <Button variant="ghost" size="sm" onClick={() => onViewDetailsParam?.(r.equipmentId)}>View Details</Button>
+                    )}
                   </div>
                 </div>
               </div>

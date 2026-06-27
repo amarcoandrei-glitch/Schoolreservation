@@ -37,7 +37,8 @@ function AppContent() {
   const navigateToDetails = (id: string, returnPath = '/student/equipment') => {
     setSelectedEquipmentId(id);
     setDetailReturnPath(returnPath);
-    setCurrentPath('/student/equipment/details');
+    const detailsPath = returnPath.endsWith('/details') ? returnPath : `${returnPath}/details`;
+    setCurrentPath(detailsPath);
   };
 
   // Navigate to role dashboard when user logs in
@@ -93,7 +94,7 @@ function AppContent() {
     // Student Routes
     if (currentPath === '/student/dashboard') return <ModernStudentDashboard onViewDetails={(id) => navigateToDetails(id, '/student/dashboard')} />;
     if (currentPath === '/student/equipment') return <BrowseEquipment onViewDetails={(id) => navigateToDetails(id, '/student/equipment')} />;
-    if (currentPath === '/student/equipment/details') return <EquipmentDetails equipmentId={selectedEquipmentId} onBack={() => setCurrentPath(detailReturnPath)} />;
+    if (currentPath === '/student/equipment/details' || currentPath === '/faculty/equipment/details') return <EquipmentDetails equipmentId={selectedEquipmentId} onBack={() => setCurrentPath(detailReturnPath)} />;
     if (currentPath === '/student/reservations') return <MyReservations onViewDetails={(id) => navigateToDetails(id, '/student/reservations')} />;
     if (currentPath === '/student/history') return <HistoryPage />;
     if (currentPath === '/student/notifications') return <NotificationsPage />;
@@ -101,9 +102,10 @@ function AppContent() {
 
     // Faculty Routes
     if (currentPath === '/faculty/dashboard') return <FacultyDashboard />;
-    if (currentPath === '/faculty/equipment') return <CourseEquipment />;
+    if (currentPath === '/faculty/equipment') return <BrowseEquipment onViewDetails={(id) => navigateToDetails(id, '/faculty/equipment')} />;
+    if (currentPath === '/faculty/department') return <CourseEquipment />;
     if (currentPath === '/faculty/requests') return <StudentRequests />;
-    if (currentPath === '/faculty/reservations') return <MyReservations />;
+    if (currentPath === '/faculty/reservations') return <MyReservations onViewDetails={(id) => navigateToDetails(id, '/faculty/reservations')} />;
     if (currentPath === '/faculty/history') return <HistoryPage />;
     if (currentPath === '/faculty/notifications') return <NotificationsPage />;
     if (currentPath === '/faculty/profile') return <ProfilePage />;

@@ -12,6 +12,7 @@ interface EquipmentCardProps {
   location?: string;
   onReserve?: () => void;
   onView?: () => void;
+  isOwnedByUser?: boolean;
 }
 
 export function EquipmentCard({
@@ -23,6 +24,7 @@ export function EquipmentCard({
   location,
   onReserve,
   onView,
+  isOwnedByUser,
 }: EquipmentCardProps) {
   const isAvailable = available > 0;
   const availabilityPercent = (available / total) * 100;
@@ -72,16 +74,20 @@ export function EquipmentCard({
         )}
 
         <Button
-          variant={isAvailable ? 'primary' : 'outline'}
+          variant={isOwnedByUser ? 'outline' : isAvailable ? 'primary' : 'outline'}
           size="sm"
           className="w-full"
-          disabled={!isAvailable}
+          disabled={isOwnedByUser ? false : !isAvailable}
           onClick={(e) => {
             e.stopPropagation();
-            onReserve?.();
+            if (isOwnedByUser) {
+              onView?.();
+            } else {
+              onReserve?.();
+            }
           }}
         >
-          {isAvailable ? 'Reserve Now' : 'Currently Unavailable'}
+          {isOwnedByUser ? 'Your Equipment' : isAvailable ? 'Reserve Now' : 'Currently Unavailable'}
         </Button>
       </div>
     </Card>

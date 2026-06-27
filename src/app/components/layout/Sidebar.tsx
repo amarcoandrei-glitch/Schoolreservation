@@ -33,7 +33,8 @@ const navItems: Record<string, NavItem[]> = {
   ],
   faculty: [
     { icon: LayoutDashboard, label: 'Dashboard',        href: '/faculty/dashboard' },
-    { icon: Package,         label: 'Department',        href: '/faculty/equipment' },
+    { icon: Package,         label: 'Browse Equipment', href: '/faculty/equipment' },
+    { icon: Archive,         label: 'My Equipment',     href: '/faculty/department' },
     { icon: Users,           label: 'Student Requests', href: '/faculty/requests', badgeKey: 'unread' },
     { icon: Calendar,        label: 'My Reservations',  href: '/faculty/reservations' },
     { icon: History,         label: 'History',           href: '/faculty/history' },

@@ -60,6 +60,12 @@ export const equipmentService = {
     return snap.docs.map((d) => ({ id: d.id, ...d.data() } as Equipment));
   },
 
+  async getByOwner(ownerId: string): Promise<Equipment[]> {
+    const q = query(collection(db, COL), where('ownerId', '==', ownerId));
+    const snap = await getDocs(q);
+    return snap.docs.map((d) => ({ id: d.id, ...d.data() } as Equipment));
+  },
+
   async create(data: EquipmentInput): Promise<string> {
     const ref = await addDoc(collection(db, COL), {
       ...data,

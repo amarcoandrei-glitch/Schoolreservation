@@ -16,6 +16,7 @@ import { optimizeImageUrl } from '../../../lib/cloudinary';
 interface EquipmentDetailsProps {
   equipmentId: string | null;
   onBack: () => void;
+  onViewDetails?: (id: string) => void;
 }
 
 const GUIDELINES = [
