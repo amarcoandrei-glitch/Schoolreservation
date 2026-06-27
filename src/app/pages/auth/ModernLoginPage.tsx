@@ -15,7 +15,7 @@ import {
   Mail,
   LockKeyhole,
   ArrowRight,
-  Tool,
+  Wrench,
 } from 'lucide-react';
 import { loginUser } from '../../../lib/authService';
 
@@ -95,7 +95,7 @@ export function ModernLoginPage({ onLogin, onSwitchToRegister }: ModernLoginPage
 
             <div className="mt-8 flex items-center gap-3">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-blue-600 shadow-lg shadow-blue-950/20">
-                <Tool className="h-7 w-7" />
+                <Wrench className="h-7 w-7" />
               </div>
               <span className="text-3xl font-semibold tracking-tight">EquipHub</span>
             </div>
@@ -150,7 +150,7 @@ export function ModernLoginPage({ onLogin, onSwitchToRegister }: ModernLoginPage
 
             <div className="mb-8">
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
-                <Tool className="h-4 w-4" />
+                <Wrench className="h-4 w-4" />
                 Equipment access
               </div>
               <h2 className="text-3xl font-semibold tracking-tight text-[--foreground]">Welcome back</h2>
