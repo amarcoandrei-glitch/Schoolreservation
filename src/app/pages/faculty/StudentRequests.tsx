@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar';
 import { SearchBar } from '../../components/ui/SearchBar';
 import { User, Calendar, Package, CheckCircle, XCircle, Loader2, Clock } from 'lucide-react';
 import { useAuth } from '../../../contexts/AuthContext';
 import { reservationService, Reservation, ReservationStatus } from '../../../services/reservationService';
+import { userService, AppUser } from '../../../services/userService';
 
 type FilterTab = 'All' | 'Pending' | 'Approved' | 'Rejected';
 const FILTER_STATUS: Record<FilterTab, ReservationStatus[]> = {
@@ -22,6 +24,7 @@ export function StudentRequests() {
   const [activeFilter, setActiveFilter] = useState<FilterTab>('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [actionId, setActionId] = useState<string | null>(null);
+  const [studentProfiles, setStudentProfiles] = useState<Record<string, AppUser>>({});
 
   useEffect(() => {
     // Subscribe to all pending student reservations
@@ -31,6 +34,26 @@ export function StudentRequests() {
     });
     return unsub;
   }, [userProfile?.uid]);
+
+  useEffect(() => {
+    const loadStudentProfiles = async () => {
+      const studentIds = Array.from(new Set(requests.map((r) => r.userId)));
+      const profiles: Record<string, AppUser> = {};
+
+      await Promise.all(
+        studentIds.map(async (id) => {
+          const profile = await userService.getById(id);
+          if (profile) profiles[id] = profile;
+        })
+      );
+
+      setStudentProfiles(profiles);
+    };
+
+    if (requests.length > 0) {
+      loadStudentProfiles();
+    }
+  }, [requests]);
 
   const filtered = requests.filter((r) => {
     const statusOk = FILTER_STATUS[activeFilter].includes(r.status as ReservationStatus);
@@ -144,12 +167,25 @@ export function StudentRequests() {
               <div className="grid gap-5 lg:grid-cols-[1.4fr_0.9fr] p-6">
                 <div className="space-y-4">
                   <div className="flex items-center gap-4">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-3xl bg-slate-950 text-white shadow-sm shadow-slate-900/10">
-                      <User className="h-6 w-6" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-slate-500">Student</p>
-                      <p className="text-xl font-semibold text-slate-950">{r.userName}</p>
+                    <div className="flex items-center gap-4">
+                      <Avatar className="h-14 w-14">
+                        {studentProfiles[r.userId]?.photoURL ? (
+                          <AvatarImage src={studentProfiles[r.userId]?.photoURL} alt={studentProfiles[r.userId]?.name ?? r.userName} />
+                        ) : (
+                          <AvatarFallback>
+                            <User className="h-6 w-6 text-slate-700" />
+                          </AvatarFallback>
+                        )}
+                      </Avatar>
+                      <div>
+                        <p className="text-sm font-medium text-slate-500">Student</p>
+                        <p className="text-xl font-semibold text-slate-950">
+                          {studentProfiles[r.userId]?.name ?? r.userName}
+                        </p>
+                        {studentProfiles[r.userId]?.studentId && (
+                          <p className="text-sm text-slate-500">ID: {studentProfiles[r.userId]?.studentId}</p>
+                        )}
+                      </div>
                     </div>
                   </div>
                   <div className="grid gap-3 sm:grid-cols-3">

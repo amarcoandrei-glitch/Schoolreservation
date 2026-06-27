@@ -14,6 +14,7 @@ export interface AppUser {
   department: string;
   studentId: string;
   isActive: boolean;
+  photoURL?: string;
   createdAt?: Timestamp;
 }
 
